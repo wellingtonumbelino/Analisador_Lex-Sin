@@ -20,13 +20,13 @@ public class AnasinSimp {
 		if(this.tokenLexemaList!=null) {
 			this.program();
 			if(this.contador!=tokenLexemaList.size()) {
-				//ERRO NO ANALISADOR SINT¡TICO
-				this.msg("ERRO NO ANALISADOR SINT¡TICO");
+				//ERRO NO ANALISADOR SINT√ÅTICO
+				this.msg("ERRO NO ANALISADOR SINT√ÅTICO");
 			}
 		}
 		else {
-			//ERRO NO ANALISADOR L…XICO
-			this.msg("ERRO NO ANALISADOR L…XICO");
+			//ERRO NO ANALISADOR L√âXICO
+			this.msg("ERRO NO ANALISADOR L√âXICO");
 		}
 		
 	}
@@ -42,6 +42,11 @@ public class AnasinSimp {
 	private void stmt_list() {
 		this.msg("Entrou em stmt_list");
 		this.stmt();
+		while(this.nextToken().getToken() == Token.PONTO_VIRGULA) {
+			this.msg("token: " + this.nextToken());
+			this.lex();
+			this.stmt_list();
+		}
 		this.msg("Saiu do stmt_list");
 	}
 	
@@ -96,27 +101,23 @@ public class AnasinSimp {
 		if(this.nextToken().getToken() == Token.IDENTIFICADOR) {
 			this.msg("ID: " + this.nextToken());
 			this.lex();
-		}
-		
-		if(this.nextToken().getToken() == Token.LITERAL_INTEIRO) {
+		}else if(this.nextToken().getToken() == Token.LITERAL_INTEIRO) {
 			this.lex();
-			if(this.nextToken().getToken() == Token.CONSTANTE_FLOAT) {
+		}else if(this.nextToken().getToken() == Token.CONSTANTE_FLOAT) {
 				this.lex();
-				if(this.nextToken().getToken() == Token.LITERAL_INTEIRO) {
+		}else if(this.nextToken().getToken() == Token.LITERAL_INTEIRO) {
 					this.msg("Token: CONSTANTE_FLOAT ");
-				}
-			}else
-				this.msg("Token: LITERAL_INTEIRO");
-		}
-		
-		if(this.nextToken().getToken() == Token.PARENTESIS_ESQ) {
+		}else if(this.nextToken().getToken() == Token.PARENTESIS_ESQ) {
 			this.msg(""+this.nextToken());
 			this.lex();
 			this.expression();
 			if(this.nextToken().getToken() == Token.PARENTESIS_DIR) {
 				this.msg(""+this.nextToken());
-			}
-		}
+			}else
+				this.msg("ERRO: PARENSTESIS_DIR esperado");
+		}else
+			this.msg("ERRO: IDENTIFICADOR, LITERAL_INTEIRO, PARENTESIS_ESQ esperados");
+		
 		this.msg("Saiu de expr(), token: " + this.nextToken());
 	}
 	
