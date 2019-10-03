@@ -17,7 +17,7 @@ public class AnalexSimples {
 	}
 	/**
 	 * Analisa a cadeia.
-	 * @return uma lista de {@link TokenLexema} ou <code>null</code>, caso a cadeia tenha um lexema inv·lido.
+	 * @return uma lista de {@link TokenLexema} ou <code>null</code>, caso a cadeia tenha um lexema inv√°lido.
 	 */
 	public List<TokenLexema> analex() {
 		if (this.cadeia == null)
@@ -33,8 +33,10 @@ public class AnalexSimples {
 			if (!this.ehIdentificador(cadeiaArray[i]))
 			if (!Character.isWhitespace(cadeiaArray[i]))
 			if (!this.ehExponencial(cadeiaArray[i]))
+			if(!this.ehBegin(cadeiaArray[i]))
+			if(!this.ehEnd(cadeiaArray[i]))
 			{
-				//ERRO pois n„o È nada reconhecido...
+				//ERRO pois n√£o √© nada reconhecido...
 				//retorne null
 				System.out.println("ERRO, nenhum lexema reconhecido...");
 				return null;
@@ -124,13 +126,29 @@ public class AnalexSimples {
 		return false;
 	}
 	
+	public boolean ehBegin(char c) {
+		if (c == Token.BEGIN.getValor()) {
+			this.tokenLexemaList.add(new TokenLexema(Token.BEGIN, "" + Token.BEGIN.getValor()));
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean ehEnd(char c) {
+		if (c == Token.END.getValor()) {
+			this.tokenLexemaList.add(new TokenLexema(Token.END, "" + Token.END.getValor()));
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean ehConstanteFloat(char c) {
 		if (Character.isDigit(c)) {
 			String digito = "";
 			do {
 				digito += cadeiaArray[i] + "";
 				i = i + 1;
-			} while (i != cadeiaArray.length && (Character.isDigit(cadeiaArray[i]) || cadeiaArray[i] == '.'));
+			} while (i != cadeiaArray.length && (Character.isDigit(cadeiaArray[i]) || cadeiaArray[i] == Token.CONSTANTE_FLOAT.getValor()));
 
 			char cadeiaDig[];
 			cadeiaDig = digito.toCharArray();
@@ -152,11 +170,9 @@ public class AnalexSimples {
 			}
 			return true;
 		}
-
 		return false;
 	}
 	
-
 	@Override
 	public String toString() {
 		String res = "";
