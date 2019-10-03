@@ -14,6 +14,8 @@ public enum Token {
 	IDENTIFICADOR('I'),
 	LITERAL_INTEIRO('L'),
 
+	BEGIN('>'),
+	END('!'),
 	EXPONENCIAL('^'),
 	CONSTANTE_FLOAT('.');
 	
