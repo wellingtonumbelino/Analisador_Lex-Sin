@@ -17,9 +17,9 @@ public class AnasinSimp {
 	}
 	
 	public void anasint() {
-		if(this.tokenLexemaList!=null) {
+		if(this.tokenLexemaList != null) {
 			this.program();
-			if(this.contador!=tokenLexemaList.size()) {
+			if(this.contador != tokenLexemaList.size()) {
 				//ERRO NO ANALISADOR SINTÁTICO
 				this.msg("ERRO NO ANALISADOR SINTÁTICO");
 			}
@@ -33,10 +33,19 @@ public class AnasinSimp {
 	
 	private void  program() {
 		this.msg("Entrou program()");
-		this.msg("begin");
-		this.stmt_list();
-		this.msg("end");
-		this.msg("Saiu program() teste id, token: " + this.nextToken());
+		if(this.nextToken().getToken() == Token.BEGIN) {
+			this.msg("token: " + this.nextToken());
+			this.lex();
+			this.stmt_list();
+			
+			if(this.nextToken().getToken() != Token.END)
+				this.msg("ERRO: Token: END esperado!");
+			else {
+				this.lex();
+				this.msg("Saiu program() teste id, token: " + this.nextToken());
+			}
+		}else
+			this.msg("ERRO: Token: BEGIN esperado!");
 	}
 	
 	private void stmt_list() {
@@ -47,7 +56,7 @@ public class AnasinSimp {
 			this.lex();
 			this.stmt_list();
 		}
-		this.msg("Saiu do stmt_list");
+		this.msg("Saiu do stmt_list, token: " + this.nextToken());
 	}
 	
 	private void stmt() {
@@ -108,15 +117,16 @@ public class AnasinSimp {
 		}else if(this.nextToken().getToken() == Token.LITERAL_INTEIRO) {
 					this.msg("Token: CONSTANTE_FLOAT ");
 		}else if(this.nextToken().getToken() == Token.PARENTESIS_ESQ) {
-			this.msg(""+this.nextToken());
+			this.msg("" + this.nextToken());
 			this.lex();
 			this.expression();
 			if(this.nextToken().getToken() == Token.PARENTESIS_DIR) {
-				this.msg(""+this.nextToken());
+				this.lex();
+				this.msg("" + this.nextToken());
 			}else
 				this.msg("ERRO: PARENSTESIS_DIR esperado");
 		}else
-			this.msg("ERRO: IDENTIFICADOR, LITERAL_INTEIRO, PARENTESIS_ESQ esperados");
+			this.msg("ERRO: NO ANALISADOR SINTÁTICO. IDENTIFICADOR, LITERAL_INTEIRO ou PARENTESIS_ESQ esperados");
 		
 		this.msg("Saiu de expr(), token: " + this.nextToken());
 	}
@@ -126,12 +136,14 @@ public class AnasinSimp {
 	}
 	
 	private void lex() {
-		if(this.contador==this.tokenLexemaList.size()) return;
+		if(this.contador == this.tokenLexemaList.size()) return;
 		this.contador++;
 	}
 	
 	private TokenLexema nextToken() {
-		if(this.contador == this.tokenLexemaList.size()) return new TokenLexema(Token.FIM, Token.FIM.getValor()+"");
+		if(this.contador == this.tokenLexemaList.size()) {
+			return new TokenLexema(Token.FIM, Token.FIM.getValor()+"");
+		}
 		return this.tokenLexemaList.get(this.contador);
 	}
 
